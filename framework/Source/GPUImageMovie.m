@@ -816,9 +816,11 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (void)cancelProcessing
 {
-    if (reader) {
-        [reader cancelReading];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (reader) {
+            [reader cancelReading];
+        }
+    });
     [self endProcessing];
 }
 
