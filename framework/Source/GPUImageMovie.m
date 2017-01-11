@@ -545,6 +545,25 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     }
 }
 
+- (UIImage *)getCurrentFrame
+{
+    if (self.asset || CMTimeGetSeconds(previousFrameTime) >= 0) {
+        AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:self.asset];
+        gen.appliesPreferredTrackTransform = YES;
+        CMTime time = previousFrameTime;
+        NSError *error = nil;
+        CMTime actualTime;
+        
+        CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+        UIImage *thumb = [[UIImage alloc] initWithCGImage:image];
+        CGImageRelease(image);
+        
+        return thumb;
+    }
+    
+    return nil;
+}
+
 - (void)processMovieFrame:(CVPixelBufferRef)movieFrame withSampleTime:(CMTime)currentSampleTime
 {
     int bufferHeight = (int) CVPixelBufferGetHeight(movieFrame);
