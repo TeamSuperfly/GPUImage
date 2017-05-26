@@ -527,6 +527,11 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (void)processMovieFrame:(CMSampleBufferRef)movieSampleBuffer;
 {
+    //Return if reader was cancelled: this will solve an OpenGL background crash
+    if (_readerCanceled) {
+        return;
+    }
+    
     //    CMTimeGetSeconds
     //    CMTimeSubtract
     
