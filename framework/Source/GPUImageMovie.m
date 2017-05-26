@@ -213,6 +213,11 @@
 
 - (AVAssetReader*)createAssetReader
 {
+    NSArray *tracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];
+    if (tracks.count == 0) {
+        return nil;
+    }
+    
     NSError *error = nil;
     AVAssetReader *assetReader = [AVAssetReader assetReaderWithAsset:self.asset error:&error];
     
@@ -256,6 +261,11 @@
 - (void)processAsset
 {
     reader = [self createAssetReader];
+    
+    if (reader == nil) {
+        NSLog(@"Error reading video track from file at URL: %@", self.url);
+        return;
+    }
     
     AVAssetReaderOutput *readerVideoTrackOutput = nil;
     AVAssetReaderOutput *readerAudioTrackOutput = nil;
